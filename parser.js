@@ -1,7 +1,12 @@
 var fs = require('fs');
 var parse = require('csv-parse');
 
+// I'm not using prototype methods because I feel like this is easier to read.
+// If you're a JavaScript ninja, you'll recognize that this implementation
+// would be less efficient if I was creating a bunch of Parser objects,
+// which for the purposes of this exercise, I'm not.
 function Parser() {
+  'use strict';
   this.data = [];
 
   this.readCSV = function(path, callback) {
@@ -37,7 +42,7 @@ function Parser() {
         var cell = this.data[i][j];
         // If the first character of the cell is an equals sign, go into case #2.
         // NOTE: I'm assuming the cell has at least one character because no malformed input is allowed.
-        if(cell[0] == '=') {
+        if(cell[0] === '=') {
           var cellValues = cell.split(" ");
           if(cellValues.length === 1) {
             // Case #2a
