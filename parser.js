@@ -3,29 +3,25 @@ var parse = require('csv-parse');
 
 // I'm not using prototype methods because I feel like this is easier to read.
 // If you're a JavaScript ninja, you'll recognize that this implementation
-// would be less efficient if I was creating a bunch of Parser objects,
-// which for the purposes of this exercise, I'm not.
+// would be less efficient if I was creating a bunch of Parser objects.
 function Parser() {
   'use strict';
   this.data = [];
 
   this.readCSV = function(path, callback) {
-    if(typeof(path) !== 'undefined' && path != null) {
-      var self = this;
-      var input = fs.createReadStream(path);
-      // NOTE: I'm assuming the CSV file is properly formatted and uses the comma delimiter throughout the file.
-      var parser = parse({ delimiter: ',', relax_column_count: true, trim: true });
+    var self = this;
+    var input = fs.createReadStream(path);
+    // NOTE: I'm assuming the CSV file is properly formatted and uses the comma delimiter throughout the file.
+    var parser = parse({ delimiter: ',', relax_column_count: true, trim: true });
 
-      // This loops through the CSV file and pushes each row into the data array.
-      input.pipe(parser).on('data', function(row) {
-        self.data.push(row);
-      }).on('end', function() {
-        callback();
-      });
-    } else {
-      throw new Exception("You need to specify a path!");
-    }
-  }
+    // This loops through the CSV file and pushes each row into the data array.
+    input.pipe(parser).on('data', function(row) {
+      self.data.push(row);
+    }).on('end', function() {
+      callback();
+    });
+  };
+
   /*
    * There are basically three cases to handle when processing a cell.
    * 1. If there is only a number, move on. I skip this step because it's unnecessary.
@@ -57,7 +53,7 @@ function Parser() {
         }
       }
     }
-  }
+  };
 
   /**
    * This function retrieves the proper value of an item in a cell, given the item.
@@ -74,15 +70,16 @@ function Parser() {
       // Return what's already there. This works for numbers and operators.
       return val;
     }
-  }
+  };
 
+  // This function calculates the arithmetic value of two values and an operator.
   this.calculateRPN = function(a, b, operator) {
     a = Number(a);
     b = Number(b);
     if(operator === '+') {
       // Edge cases:
-      //   1. Overflow - one assumption I'm making is that integer and fp numbers have
-      //      the same max value, which isn't the case.
+      //   1. Overflow - one assumption I'm making is that integer and floating point numbers have
+      //      the same max value, which isn't the case in reality.
       //   2. Floating-point precision issues (e.g. 0.2 * 0.1 !== 0.02 in JavaScript). I'm not planning to address this.
       //      If I needed to address this, I'd create a module to handle it separately. The logic would work something like:
       //      For addition/subtraction/multiplication, figure out how many decimal spaces are allowed in the result, then
@@ -103,14 +100,14 @@ function Parser() {
       //   2. Overflow
       //   3. Floating-point precision issues
       if(b > 0) {
-        // NOTE: In the example document, I saw =11 2 / is 5.5 and not 5, so I did not account for integer
+        // NOTE: In the example document, I saw =11 2 / is 5.5 and not 5, so I did NOT account for integer
         // versus floating point division.
         return a / b > Number.MAX_SAFE_INTEGER ? 'Error: Overflow' : a / b;
       } else {
         return 'Error: Divide by Zero';
       }
     }
-  }
+  };
 
   // Log the output in CSV format.
   this.logOutput = function() {
@@ -119,7 +116,7 @@ function Parser() {
     }
     this.data = this.data.join("\n");
     console.log(this.data);
-  }
+  };
 }
 
 module.exports = new Parser();
