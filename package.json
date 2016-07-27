@@ -4,7 +4,7 @@
   "description": "Simple RPN calculator that reads input out of a CSV and outputs to stdout",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -17,7 +17,12 @@
   },
   "homepage": "https://github.com/stephenwoods/rpn",
   "devDependencies": {},
+  "engines": {
+    "node": ">=0.12"
+  },
   "dependencies": {
-    "csv-parse": "^1.1.5"
+    "chai": "^3.5.0",
+    "csv-parse": "^1.1.5",
+    "mocha": "^2.5.3"
   }
 }
