@@ -5,7 +5,6 @@ function Parser() {
   this.data = [];
 
   this.readCSV = function(path, callback) {
-    console.log('here');
     if(typeof(path) !== 'undefined' && path != null) {
       var self = this;
       var input = fs.createReadStream(path);
@@ -31,8 +30,7 @@ function Parser() {
    *      b. If there are three items after the equals sign (two values and an operand),
    *         grab all appropriate values, complete the RPN calculation, and replace the cell with the result.
    */
-   this.processData = function() {
-     console.log(this);
+  this.processData = function() {
     // Looping through each cell.
     for(var i = 0; i < this.data.length; i++) {
       for(var j = 0; j < this.data[i].length; j++) {
@@ -41,10 +39,10 @@ function Parser() {
         // NOTE: I'm assuming the cell has at least one character because no malformed input is allowed.
         if(cell[0] == '=') {
           var cellValues = cell.split(" ");
-          if(cellValues.length == 1) {
+          if(cellValues.length === 1) {
             // Case #2a
             this.data[i][j] = this.getValue(cellValues[0].substring(1)); // Stripping off the leading equals sign.
-          } else if(cellValues.length == 3) {
+          } else if(cellValues.length === 3) {
             // Case #2b
             var opA = this.getValue(cellValues[0].substring(1));
             var obB = this.getValue(cellValues[1]);
@@ -76,7 +74,7 @@ function Parser() {
   this.calculateRPN = function(a, b, operator) {
     a = Number(a);
     b = Number(b);
-    if(operator == '+') {
+    if(operator === '+') {
       // Edge cases:
       //   1. Overflow - one assumption I'm making is that integer and fp numbers have
       //      the same max value, which isn't the case.
@@ -85,10 +83,10 @@ function Parser() {
       //      For addition/subtraction/multiplication, figure out how many decimal spaces are allowed in the result, then
       //      use Number.toFixed() to ensure the proper number of decimal places. See: http://stackoverflow.com/a/3439981/1048200
       return a + b > Number.MAX_SAFE_INTEGER? 'Error: Overflow' : a + b;
-    } else if(operator == '-') {
+    } else if(operator === '-') {
       // Edge case: Underflow shouldn't be a problem given input constraints, but underflow
       return a - b < Number.MIN_SAFE_INTEGER ? 'Error: Underflow' : a - b;
-    } else if(operator == '*') {
+    } else if(operator === '*') {
       // Edge cases:
       //   1. Overflow
       //   2. Floating-point precision issues
@@ -111,7 +109,6 @@ function Parser() {
 
   // Log the output in CSV format.
   this.logOutput = function() {
-    console.log('yay');
     for(var i = 0; i < this.data.length; i++) {
       this.data[i] = this.data[i].join(",");
     }
