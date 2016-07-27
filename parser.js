@@ -81,9 +81,7 @@ function Parser() {
       //   1. Overflow - one assumption I'm making is that integer and floating point numbers have
       //      the same max value, which isn't the case in reality.
       //   2. Floating-point precision issues (e.g. 0.2 * 0.1 !== 0.02 in JavaScript). I'm not planning to address this.
-      //      If I needed to address this, I'd create a module to handle it separately. The logic would work something like:
-      //      For addition/subtraction/multiplication, figure out how many decimal spaces are allowed in the result, then
-      //      use Number.toFixed() to ensure the proper number of decimal places. See: http://stackoverflow.com/a/3439981/1048200
+      //      If I needed to, I'd create/use a module to handle it separately - see: http://stackoverflow.com/a/3439981/1048200.
       return a + b > Number.MAX_SAFE_INTEGER? 'Error: Overflow' : a + b;
     } else if(operator === '-') {
       // Edge case: Underflow shouldn't be a problem given input constraints, but underflow
